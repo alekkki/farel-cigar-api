@@ -1,7 +1,6 @@
 package com.farelcigar.api.api;
 
 import com.farelcigar.api.domain.Brand;
-import com.farelcigar.api.domain.Event;
 import com.farelcigar.api.domain.User;
 import com.farelcigar.api.domain.dto.EventDto;
 import com.farelcigar.api.domain.dto.EventPicturesDto;
@@ -43,12 +42,6 @@ public class PublicApiController {
         this.userDetailsService = userDetailsService;
     }
 
-    @PostMapping(value = "/test")
-    public String test(@RequestParam("file") MultipartFile file,
-                       @RequestParam("name") String name) {
-        return "Name " + name + " Filename: " + file.getOriginalFilename();
-    }
-
     @GetMapping(value = "/user")
     public boolean isAuthenticated(Authentication authentication) {
         return userDetailsService.isAuthenticated(authentication);
@@ -59,10 +52,10 @@ public class PublicApiController {
         return userDetailsService.getAuthUser(authentication);
     }*/
 
-    @PostMapping(value = "/user")
+    /*@PostMapping(value = "/user")
     public User createUser(@RequestBody User user) {
         return userDetailsService.createUser(user);
-    }
+    }*/
 
     @GetMapping(value = "/brand/all")
     public List<Brand> getAllBrands() {

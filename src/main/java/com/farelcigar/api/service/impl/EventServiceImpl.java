@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final EventPictureRepository eventPictureRepository;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
     private final Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
 
     public EventServiceImpl(
@@ -45,7 +45,7 @@ public class EventServiceImpl implements EventService {
                 eventDto.getTitle(),
                 eventDto.getLocation(),
                 eventDto.getDescription(),
-                LocalDateTime.parse(eventDto.getDate(), formatter));
+                LocalDate.parse(eventDto.getDate(), formatter));
 
         logger.info("Event with title [{}] created", event.getTitle());
         return eventRepository.save(event);
@@ -138,7 +138,7 @@ public class EventServiceImpl implements EventService {
                     event.setTitle(eventDto.getTitle());
                     event.setLocation(eventDto.getLocation());
                     event.setDescription(eventDto.getDescription());
-                    event.setDate(LocalDateTime.parse(eventDto.getDate(), formatter));
+                    event.setDate(LocalDate.parse(eventDto.getDate(), formatter));
                     logger.info("Event with id [{}] updated", id);
                     return eventRepository.save(event);
                 })

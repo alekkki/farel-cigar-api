@@ -97,6 +97,6 @@ public class SessionSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.authorizeRequests()
                 .antMatchers("/api/admin*//**//**")
-                .authenticated();
+                .permitAll();
     }
 }

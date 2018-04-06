@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,7 +17,7 @@ public class Event extends BaseEntity {
 
     private String description;
 
-    private LocalDateTime date;
+    private LocalDate date;
 
     @Lob
     private byte[] data;
@@ -35,7 +36,7 @@ public class Event extends BaseEntity {
             String title,
             String location,
             String description,
-            LocalDateTime date) {
+            LocalDate date) {
         this.title = title;
         this.location = location;
         this.description = description;
@@ -50,7 +51,7 @@ public class Event extends BaseEntity {
             String title,
             String location,
             String description,
-            LocalDateTime date,
+            LocalDate date,
             byte[] data,
             String filename,
             Integer size,
@@ -89,11 +90,11 @@ public class Event extends BaseEntity {
         this.description = description;
     }
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

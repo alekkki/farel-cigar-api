@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping(value = "/api/public")
+@RequestMapping(value = "/api/admin")
 public class AdminApiController {
 
     private final BrandService brandService;
@@ -133,7 +133,7 @@ public class AdminApiController {
         }
     }
 
-    @DeleteMapping(value = "/event/{id}/picture")
+    @DeleteMapping(value = "/event/picture/{id}")
     public void deleteEventPicture(@PathVariable Long id) {
         eventPictureService.deletePicture(id);
     }
