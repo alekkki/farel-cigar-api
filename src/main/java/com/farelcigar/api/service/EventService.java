@@ -1,7 +1,6 @@
 package com.farelcigar.api.service;
 
 import com.farelcigar.api.domain.Event;
-import com.farelcigar.api.domain.EventPicture;
 import com.farelcigar.api.domain.dto.EventDto;
 import com.farelcigar.api.domain.dto.EventPicturesDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,23 +13,21 @@ public interface EventService {
 
     Event createEvent(EventDto eventDto);
 
-    List<Event> getAllEvents();
-
-    EventPicturesDto getEventById(Long id);
-
-    Event updateEvent(Long id, EventDto eventDto);
-
-    void deleteEvent(Long id);
-
-    EventPicture addPicture(
+    Event addPicture(
             Long eventId,
             MultipartFile picture) throws IOException;
 
+    List<EventDto> getAllEvents();
+
+    EventPicturesDto getEventById(Long id);
+
     void getPicture(
-            Long id,
+            Long eventId,
             HttpServletResponse httpServletResponse) throws IOException;
 
-    void deletePicture(Long id);
+    Event updateEvent(
+            Long id,
+            EventDto eventDto);
 
-    void deleteAllPicturesForEvent(Long eventId);
+    void deleteEvent(Long id);
 }

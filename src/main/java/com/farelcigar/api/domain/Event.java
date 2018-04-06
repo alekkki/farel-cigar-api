@@ -35,6 +35,21 @@ public class Event extends BaseEntity {
             String title,
             String location,
             String description,
+            LocalDateTime date) {
+        this.title = title;
+        this.location = location;
+        this.description = description;
+        this.date = date;
+        this.data = null;
+        this.filename = null;
+        this.size = 0;
+        this.contentType = null;
+    }
+
+    public Event(
+            String title,
+            String location,
+            String description,
             LocalDateTime date,
             byte[] data,
             String filename,

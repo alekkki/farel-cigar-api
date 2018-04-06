@@ -21,6 +21,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.toIntExact;
+
 @Service
 public class EventServiceImpl implements EventService {
 
@@ -43,20 +45,50 @@ public class EventServiceImpl implements EventService {
                 eventDto.getTitle(),
                 eventDto.getLocation(),
                 eventDto.getDescription(),
-                LocalDateTime.parse(eventDto.getDate(), formatter),
-                eventDto.getData(),
-                eventDto.getFilename(),
-                eventDto.getData().length,
-                eventDto.getContentType());
+                LocalDateTime.parse(eventDto.getDate(), formatter));
 
         logger.info("Event with title [{}] created", event.getTitle());
         return eventRepository.save(event);
     }
 
     @Override
-    public List<Event> getAllEvents() {
-        return eventRepository.findAll();
+    public Event addPicture(
+            Long eventId,
+            MultipartFile picture) throws IOException {
+
+        byte[] data = picture.getBytes();
+        int size = toIntExact(picture.getSize());
+
+        return eventRepository.findById(eventId)
+                .map(event -> {
+                    event.setData(data);
+                    event.setFilename(picture.getOriginalFilename());
+                    event.setSize(size);
+                    event.setContentType(picture.getContentType());
+                    logger.info("Picture added for event with id [{}]", eventId);
+                    return eventRepository.save(event);
+                })
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Event with id [" + eventId + "] not found")
+                );
     }
+
+    @Override
+    public List<EventDto> getAllEvents() {
+        List<EventDto> eventDtoList = new ArrayList<>();
+        List<Event> events = eventRepository.findAll();
+        for (Event e : events) {
+            EventDto eventDto = new EventDto(
+                    e.getId(),
+                    e.getTitle(),
+                    e.getLocation(),
+                    e.getDescription(),
+                    e.getDate().toString());
+            eventDtoList.add(eventDto);
+        }
+        return eventDtoList;
+    }
+
 
     @Override
     public EventPicturesDto getEventById(Long id) {
@@ -81,6 +113,24 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public void getPicture(
+            Long eventId,
+            HttpServletResponse httpServletResponse) throws IOException {
+
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Event with id [" + eventId + "] not found")
+                );
+
+        httpServletResponse.setContentLength(event.getSize());
+        httpServletResponse.setContentType(event.getContentType());
+
+        OutputStream outputStream = httpServletResponse.getOutputStream();
+        outputStream.write(event.getData());
+        outputStream.flush();
+    }
+
+    @Override
     public Event updateEvent(Long id, EventDto eventDto) {
 
         return eventRepository.findById(id)
@@ -89,10 +139,6 @@ public class EventServiceImpl implements EventService {
                     event.setLocation(eventDto.getLocation());
                     event.setDescription(eventDto.getDescription());
                     event.setDate(LocalDateTime.parse(eventDto.getDate(), formatter));
-                    event.setData(eventDto.getData());
-                    event.setFilename(eventDto.getFilename());
-                    event.setSize(eventDto.getData().length);
-                    event.setContentType(eventDto.getContentType());
                     logger.info("Event with id [{}] updated", id);
                     return eventRepository.save(event);
                 })
@@ -109,57 +155,5 @@ public class EventServiceImpl implements EventService {
 
         logger.info("Event with id [{}] deleted", id);
         eventRepository.deleteById(id);
-    }
-
-    @Override
-    public EventPicture addPicture(
-            Long eventId,
-            MultipartFile picture) throws IOException {
-
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Event with id [" + eventId + "] not found")
-                );
-
-        EventPicture eventPicture = new EventPicture(
-                picture.getBytes(),
-                picture.getOriginalFilename(),
-                picture.getBytes().length,
-                picture.getContentType(),
-                event);
-
-        logger.info("Picture added for event with id [{}]", event.getId());
-        return eventPictureRepository.save(eventPicture);
-    }
-
-    @Override
-    public void getPicture(
-            Long id,
-            HttpServletResponse httpServletResponse) throws IOException {
-
-        EventPicture eventPicture = eventPictureRepository.findById(id)
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Picture with id [" + id + "] not found")
-                );
-
-        httpServletResponse.setContentLength(eventPicture.getSize());
-        httpServletResponse.setContentType(eventPicture.getContentType());
-
-        OutputStream outputStream = httpServletResponse.getOutputStream();
-        outputStream.write(eventPicture.getData());
-        outputStream.flush();
-    }
-
-    @Override
-    public void deletePicture(Long id) {
-        logger.info("Picture with id [{}] deleted", id);
-        eventPictureRepository.deleteById(id);
-    }
-
-    @Override
-    public void deleteAllPicturesForEvent(Long eventId) {
-        List<EventPicture> eventPictures = eventPictureRepository.findByEventId(eventId);
-        logger.info("Pictures for event with id [{}] deleted", eventId);
-        eventPictureRepository.deleteAll(eventPictures);
     }
 }

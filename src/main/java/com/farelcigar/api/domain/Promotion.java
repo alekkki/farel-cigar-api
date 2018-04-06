@@ -30,7 +30,23 @@ public class Promotion extends BaseEntity {
     @Column(name = "content_type")
     private String contentType;
 
-    public Promotion() {}
+    public Promotion() {
+    }
+
+    public Promotion(
+            String title,
+            String description,
+            LocalDateTime startDate,
+            LocalDateTime endDate) {
+        this.title = title;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.data = null;
+        this.filename = null;
+        this.size = 0;
+        this.contentType = null;
+    }
 
     public Promotion(
             String title,

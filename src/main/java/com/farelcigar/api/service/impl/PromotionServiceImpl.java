@@ -8,6 +8,7 @@ import com.farelcigar.api.service.PromotionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,6 +17,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Math.toIntExact;
 
 @Service
 public class PromotionServiceImpl implements PromotionService {
@@ -35,37 +38,54 @@ public class PromotionServiceImpl implements PromotionService {
                 promotionDto.getTitle(),
                 promotionDto.getDescription(),
                 LocalDateTime.parse(promotionDto.getStartDate(), formatter),
-                LocalDateTime.parse(promotionDto.getEndDate(), formatter),
-                promotionDto.getData(),
-                promotionDto.getFilename(),
-                promotionDto.getData().length,
-                promotionDto.getContentType());
+                LocalDateTime.parse(promotionDto.getEndDate(), formatter));
 
         logger.info("Promotion with title [{}] created", promotion.getTitle());
         return promotionRepository.save(promotion);
     }
 
     @Override
+    public Promotion addPicture(
+            Long promotionId,
+            MultipartFile picture) throws IOException {
+
+        byte[] data = picture.getBytes();
+        int size = toIntExact(picture.getSize());
+
+        return promotionRepository.findById(promotionId)
+                .map(promotion -> {
+                    promotion.setData(data);
+                    promotion.setFilename(picture.getOriginalFilename());
+                    promotion.setSize(size);
+                    promotion.setContentType(picture.getContentType());
+                    logger.info("Picture added for promotion with id [{}]", promotionId);
+                    return promotionRepository.save(promotion);
+                })
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Promotion with id [" + promotionId + "] not found")
+                );
+    }
+
+    @Override
     public List<PromotionDto> getAllPromotions() {
         List<PromotionDto> promotionDtoList = new ArrayList<>();
         List<Promotion> promotions = promotionRepository.findAll();
-        for (Promotion promotion : promotions) {
-            PromotionDto p = new PromotionDto(
-                    promotion.getTitle(),
-                    promotion.getDescription(),
-                    promotion.getStartDate().toString(),
-                    promotion.getEndDate().toString(),
-                    promotion.getData(),
-                    promotion.getFilename(),
-                    promotion.getSize(),
-                    promotion.getContentType());
-            promotionDtoList.add(p);
+        for (Promotion p : promotions) {
+            PromotionDto promotionDto = new PromotionDto(
+                    p.getId(),
+                    p.getTitle(),
+                    p.getDescription(),
+                    p.getStartDate().toString(),
+                    p.getEndDate().toString());
+            promotionDtoList.add(promotionDto);
         }
         return promotionDtoList;
     }
 
     @Override
-    public Promotion updatePromotion(Long id, PromotionDto promotionDto) {
+    public Promotion updatePromotion(
+            Long id,
+            PromotionDto promotionDto) {
 
         return promotionRepository.findById(id)
                 .map(promotion -> {
@@ -73,10 +93,6 @@ public class PromotionServiceImpl implements PromotionService {
                     promotion.setDescription(promotionDto.getDescription());
                     promotion.setStartDate(LocalDateTime.parse(promotionDto.getStartDate(), formatter));
                     promotion.setEndDate(LocalDateTime.parse(promotionDto.getEndDate(), formatter));
-                    promotion.setData(promotionDto.getData());
-                    promotion.setFilename(promotion.getFilename());
-                    promotion.setSize(promotionDto.getData().length);
-                    promotion.setContentType(promotion.getContentType());
                     logger.info("Promotion with id [{}] updated", id);
                     return promotionRepository.save(promotion);
                 })

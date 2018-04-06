@@ -2,6 +2,8 @@ package com.farelcigar.api.domain.dto;
 
 public class PromotionDto {
 
+    private Long id;
+
     private String title;
 
     private String description;
@@ -10,34 +12,28 @@ public class PromotionDto {
 
     private String endDate;
 
-    private byte[] data;
-
-    private String filename;
-
-    private Integer size;
-
-    private String contentType;
-
     public PromotionDto() {
     }
 
     public PromotionDto(
+            Long id,
             String title,
             String description,
             String startDate,
-            String endDate,
-            byte[] data,
-            String filename,
-            Integer size,
-            String contentType) {
+            String endDate) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.data = data;
-        this.filename = filename;
-        this.size = size;
-        this.contentType = contentType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -70,38 +66,6 @@ public class PromotionDto {
 
     public void setEndDate(String endDate) {
         this.endDate = endDate;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
     }
 }
 

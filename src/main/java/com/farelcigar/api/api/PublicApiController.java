@@ -3,15 +3,18 @@ package com.farelcigar.api.api;
 import com.farelcigar.api.domain.Brand;
 import com.farelcigar.api.domain.Event;
 import com.farelcigar.api.domain.User;
+import com.farelcigar.api.domain.dto.EventDto;
 import com.farelcigar.api.domain.dto.EventPicturesDto;
 import com.farelcigar.api.domain.dto.PromotionDto;
 import com.farelcigar.api.service.BrandService;
+import com.farelcigar.api.service.EventPictureService;
 import com.farelcigar.api.service.EventService;
 import com.farelcigar.api.service.PromotionService;
 import com.farelcigar.api.service.impl.UserDetailsServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -24,17 +27,26 @@ public class PublicApiController {
     private final BrandService brandService;
     private final EventService eventService;
     private final PromotionService promotionService;
+    private final EventPictureService eventPictureService;
     private final UserDetailsServiceImpl userDetailsService;
 
     public PublicApiController(
             BrandService brandService,
             EventService eventService,
             PromotionService promotionService,
+            EventPictureService eventPictureService,
             UserDetailsServiceImpl userDetailsService) {
         this.brandService = brandService;
         this.eventService = eventService;
         this.promotionService = promotionService;
+        this.eventPictureService = eventPictureService;
         this.userDetailsService = userDetailsService;
+    }
+
+    @PostMapping(value = "/test")
+    public String test(@RequestParam("file") MultipartFile file,
+                       @RequestParam("name") String name) {
+        return "Name " + name + " Filename: " + file.getOriginalFilename();
     }
 
     @GetMapping(value = "/user")
@@ -73,7 +85,7 @@ public class PublicApiController {
     }
 
     @GetMapping(value = "/event/all")
-    public List<Event> getAllEvents() {
+    public List<EventDto> getAllEvents() {
         return eventService.getAllEvents();
     }
 
@@ -87,6 +99,13 @@ public class PublicApiController {
             @PathVariable Long id,
             HttpServletResponse httpServletResponse) throws IOException {
         eventService.getPicture(id, httpServletResponse);
+    }
+
+    @GetMapping(value = "/event/pictures/{id}")
+    public void getEventPictures(
+            @PathVariable Long id,
+            HttpServletResponse httpServletResponse) throws IOException {
+        eventPictureService.getPicture(id, httpServletResponse);
     }
 
     @GetMapping(value = "/promotion/all")

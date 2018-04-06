@@ -2,6 +2,8 @@ package com.farelcigar.api.domain.dto;
 
 public class EventDto {
 
+    private Long id;
+
     private String title;
 
     private String location;
@@ -10,30 +12,28 @@ public class EventDto {
 
     private String date;
 
-    private byte[] data;
-
-    private String filename;
-
-    private String contentType;
-
     public EventDto() {
     }
 
     public EventDto(
+            Long id,
             String title,
             String location,
             String description,
-            String date,
-            byte[] data,
-            String filename,
-            String contentType) {
+            String date) {
+        this.id = id;
         this.title = title;
         this.location = location;
         this.description = description;
         this.date = date;
-        this.data = data;
-        this.filename = filename;
-        this.contentType = contentType;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -66,29 +66,5 @@ public class EventDto {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
     }
 }
