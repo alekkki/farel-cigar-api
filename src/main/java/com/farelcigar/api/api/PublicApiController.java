@@ -54,12 +54,10 @@ public class PublicApiController {
         return userDetailsService.isAuthenticated(authentication);
     }
 
-    /*
-    @GetMapping(value = "/user")
+    /*@GetMapping(value = "/user")
     public User getAuthUser(Authentication authentication) {
         return userDetailsService.getAuthUser(authentication);
-    }
-    */
+    }*/
 
     @PostMapping(value = "/user")
     public User createUser(@RequestBody User user) {
