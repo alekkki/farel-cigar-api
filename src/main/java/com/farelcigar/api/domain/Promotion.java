@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "promotions")
@@ -15,10 +15,10 @@ public class Promotion extends BaseEntity {
     private String description;
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Lob
     private byte[] data;
@@ -36,8 +36,8 @@ public class Promotion extends BaseEntity {
     public Promotion(
             String title,
             String description,
-            LocalDateTime startDate,
-            LocalDateTime endDate) {
+            LocalDate startDate,
+            LocalDate endDate) {
         this.title = title;
         this.description = description;
         this.startDate = startDate;
@@ -51,8 +51,8 @@ public class Promotion extends BaseEntity {
     public Promotion(
             String title,
             String description,
-            LocalDateTime startDate,
-            LocalDateTime endDate,
+            LocalDate startDate,
+            LocalDate endDate,
             byte[] data,
             String filename,
             Integer size,
@@ -83,19 +83,19 @@ public class Promotion extends BaseEntity {
         this.description = description;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

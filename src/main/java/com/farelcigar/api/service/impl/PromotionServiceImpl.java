@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import static java.lang.Math.toIntExact;
 public class PromotionServiceImpl implements PromotionService {
 
     private final PromotionRepository promotionRepository;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    private final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
     private final Logger logger = LoggerFactory.getLogger(PromotionServiceImpl.class);
 
     public PromotionServiceImpl(PromotionRepository promotionRepository) {
@@ -37,8 +37,8 @@ public class PromotionServiceImpl implements PromotionService {
         Promotion promotion = new Promotion(
                 promotionDto.getTitle(),
                 promotionDto.getDescription(),
-                LocalDateTime.parse(promotionDto.getStartDate(), formatter),
-                LocalDateTime.parse(promotionDto.getEndDate(), formatter));
+                LocalDate.parse(promotionDto.getStartDate(), formatter),
+                LocalDate.parse(promotionDto.getEndDate(), formatter));
 
         logger.info("Promotion with title [{}] created", promotion.getTitle());
         return promotionRepository.save(promotion);
@@ -91,8 +91,8 @@ public class PromotionServiceImpl implements PromotionService {
                 .map(promotion -> {
                     promotion.setTitle(promotionDto.getTitle());
                     promotion.setDescription(promotionDto.getDescription());
-                    promotion.setStartDate(LocalDateTime.parse(promotionDto.getStartDate(), formatter));
-                    promotion.setEndDate(LocalDateTime.parse(promotionDto.getEndDate(), formatter));
+                    promotion.setStartDate(LocalDate.parse(promotionDto.getStartDate(), formatter));
+                    promotion.setEndDate(LocalDate.parse(promotionDto.getEndDate(), formatter));
                     logger.info("Promotion with id [{}] updated", id);
                     return promotionRepository.save(promotion);
                 })
