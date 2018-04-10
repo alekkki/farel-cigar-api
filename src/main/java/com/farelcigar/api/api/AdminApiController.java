@@ -66,11 +66,20 @@ public class AdminApiController {
         brandService.deleteBrand(id);
     }
 
-    @PostMapping(value = "/brand/{id}/document")
-    public BrandFile addBrandDocument(
+    @PostMapping(value = "/brand/{id}/files")
+    public void addBrandFiles(
             @PathVariable Long id,
+            @RequestParam("picture") MultipartFile picture,
             @RequestParam("document") MultipartFile document) throws IOException {
-        return brandService.addFile(id, FileType.DOCUMENT, document);
+        brandService.addFiles(id, picture, document);
+    }
+
+    @PutMapping(value = "/brand/{id}/files")
+    public void updateBrandFiles(
+            @PathVariable Long id,
+            @RequestParam("picture") MultipartFile picture,
+            @RequestParam("document") MultipartFile document) throws IOException {
+        brandService.updateFiles(id, picture, document);
     }
 
     @PostMapping(value = "/brand/{id}/picture")
@@ -80,11 +89,11 @@ public class AdminApiController {
         return brandService.addFile(id, FileType.PICTURE, picture);
     }
 
-    @PutMapping(value = "/brand/{id}/document")
-    public BrandFile updateBrandDocument(
+    @PostMapping(value = "/brand/{id}/document")
+    public BrandFile addBrandDocument(
             @PathVariable Long id,
             @RequestParam("document") MultipartFile document) throws IOException {
-        return brandService.updateFile(id, FileType.DOCUMENT, document);
+        return brandService.addFile(id, FileType.DOCUMENT, document);
     }
 
     @PutMapping(value = "/brand/{id}/picture")
@@ -92,6 +101,13 @@ public class AdminApiController {
             @PathVariable Long id,
             @RequestParam("picture") MultipartFile picture) throws IOException {
         return brandService.updateFile(id, FileType.PICTURE, picture);
+    }
+
+    @PutMapping(value = "/brand/{id}/document")
+    public BrandFile updateBrandDocument(
+            @PathVariable Long id,
+            @RequestParam("document") MultipartFile document) throws IOException {
+        return brandService.updateFile(id, FileType.DOCUMENT, document);
     }
 
     @DeleteMapping(value = "/brand/file/{id}")

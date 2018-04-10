@@ -1,7 +1,6 @@
 package com.farelcigar.api.api;
 
 import com.farelcigar.api.domain.Brand;
-import com.farelcigar.api.domain.User;
 import com.farelcigar.api.domain.dto.EventDto;
 import com.farelcigar.api.domain.dto.EventPicturesDto;
 import com.farelcigar.api.domain.dto.PromotionDto;
@@ -12,8 +11,10 @@ import com.farelcigar.api.service.PromotionService;
 import com.farelcigar.api.service.impl.UserDetailsServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

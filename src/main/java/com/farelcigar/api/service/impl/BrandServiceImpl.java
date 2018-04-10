@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import static java.lang.Math.toIntExact;
+
 @Service
 public class BrandServiceImpl implements BrandService {
 
@@ -71,6 +73,85 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    public void addFiles(
+            Long brandId,
+            MultipartFile picture,
+            MultipartFile document) throws IOException {
+
+        Brand brand = brandRepository.findById(brandId)
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Brand with id [" + brandId + "] not found")
+                );
+
+        if (picture != null) {
+            BrandFile pictureFile = new BrandFile(
+                    picture.getBytes(),
+                    picture.getOriginalFilename(),
+                    toIntExact(picture.getSize()),
+                    picture.getContentType(),
+                    FileType.PICTURE,
+                    brand);
+
+            logger.info("Picture added for brand with id [{}]", brandId);
+            brandFileRepository.save(pictureFile);
+        }
+
+        if (document != null) {
+            BrandFile documentFile = new BrandFile(
+                    document.getBytes(),
+                    document.getOriginalFilename(),
+                    toIntExact(document.getSize()),
+                    document.getContentType(),
+                    FileType.DOCUMENT,
+                    brand);
+
+            logger.info("Document added for brand with id [{}]", brandId);
+            brandFileRepository.save(documentFile);
+        }
+    }
+
+    @Override
+    public void updateFiles(
+            Long brandId,
+            MultipartFile picture,
+            MultipartFile document) throws IOException {
+
+        if (picture != null) {
+            byte[] pictureData = picture.getBytes();
+            int pictureSize = toIntExact(picture.getSize());
+            brandFileRepository.findByBrandIdAndFileType(brandId, FileType.PICTURE)
+                    .map(brandFile -> {
+                        brandFile.setData(pictureData);
+                        brandFile.setName(picture.getOriginalFilename());
+                        brandFile.setSize(pictureSize);
+                        brandFile.setContentType(picture.getContentType());
+                        logger.info("Picture for brand with id [{}] updated", brandId);
+                        return brandFileRepository.save(brandFile);
+                    })
+                    .orElseThrow(() ->
+                            new EntityNotFoundException("File for brand with id [" + brandId + "] not found")
+                    );
+        }
+
+        if (document != null) {
+            byte[] documentData = document.getBytes();
+            int documentSize = toIntExact(document.getSize());
+            brandFileRepository.findByBrandIdAndFileType(brandId, FileType.DOCUMENT)
+                    .map(brandFile -> {
+                        brandFile.setData(documentData);
+                        brandFile.setName(document.getOriginalFilename());
+                        brandFile.setSize(documentSize);
+                        brandFile.setContentType(document.getContentType());
+                        logger.info("Document for brand with id [{}] updated", brandId);
+                        return brandFileRepository.save(brandFile);
+                    })
+                    .orElseThrow(() ->
+                            new EntityNotFoundException("File for brand with id [" + brandId + "] not found")
+                    );
+        }
+    }
+
+    @Override
     public BrandFile addFile(
             Long brandId,
             FileType fileType,
@@ -84,7 +165,7 @@ public class BrandServiceImpl implements BrandService {
         BrandFile brandFile = new BrandFile(
                 file.getBytes(),
                 file.getOriginalFilename(),
-                file.getBytes().length,
+                toIntExact(file.getSize()),
                 file.getContentType(),
                 fileType,
                 brand);
@@ -100,11 +181,12 @@ public class BrandServiceImpl implements BrandService {
             MultipartFile file) throws IOException {
 
         byte[] data = file.getBytes();
+        int size = toIntExact(file.getSize());
         return brandFileRepository.findByBrandIdAndFileType(brandId, fileType)
                 .map(brandFile -> {
                     brandFile.setData(data);
                     brandFile.setName(file.getOriginalFilename());
-                    brandFile.setSize(data.length);
+                    brandFile.setSize(size);
                     brandFile.setContentType(file.getContentType());
                     logger.info("File for brand with id [{}] updated", brandId);
                     return brandFileRepository.save(brandFile);

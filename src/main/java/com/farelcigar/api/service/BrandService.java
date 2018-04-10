@@ -20,6 +20,16 @@ public interface BrandService {
 
     void deleteBrand(Long id);
 
+    void addFiles(
+            Long brandId,
+            MultipartFile picture,
+            MultipartFile document) throws IOException;
+
+    void updateFiles(
+            Long brandId,
+            MultipartFile picture,
+            MultipartFile document) throws IOException;
+
     BrandFile addFile(
             Long brandId,
             FileType fileType,
