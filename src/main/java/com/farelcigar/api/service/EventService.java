@@ -13,7 +13,7 @@ public interface EventService {
 
     Event createEvent(EventDto eventDto);
 
-    Event addPicture(
+    void addPicture(
             Long eventId,
             MultipartFile picture) throws IOException;
 

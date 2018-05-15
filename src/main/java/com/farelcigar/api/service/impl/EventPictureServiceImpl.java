@@ -33,7 +33,7 @@ public class EventPictureServiceImpl implements EventPictureService {
     }
 
     @Override
-    public EventPicture addPicture(
+    public void addPicture(
             Long eventId,
             MultipartFile picture) throws IOException {
 
@@ -42,15 +42,17 @@ public class EventPictureServiceImpl implements EventPictureService {
                         new EntityNotFoundException("Event with id [" + eventId + "] not found")
                 );
 
-        EventPicture eventPicture = new EventPicture(
-                picture.getBytes(),
-                picture.getOriginalFilename(),
-                toIntExact(picture.getSize()),
-                picture.getContentType(),
-                event);
+        if (picture != null) {
+            EventPicture eventPicture = new EventPicture(
+                    picture.getBytes(),
+                    picture.getOriginalFilename(),
+                    toIntExact(picture.getSize()),
+                    picture.getContentType(),
+                    event);
 
-        logger.info("Picture added for event with id [{}]", event.getId());
-        return eventPictureRepository.save(eventPicture);
+            logger.info("Picture added for event with id [{}]", event.getId());
+            eventPictureRepository.save(eventPicture);
+        }
     }
 
     @Override
@@ -69,6 +71,19 @@ public class EventPictureServiceImpl implements EventPictureService {
         OutputStream outputStream = httpServletResponse.getOutputStream();
         outputStream.write(eventPicture.getData());
         outputStream.flush();
+    }
+
+    @Override
+    public void updatePictures(
+            Long eventId,
+            MultipartFile[] pictures) throws IOException {
+
+        if (pictures != null && pictures.length > 0) {
+            deleteAllPicturesForEvent(eventId);
+            for (MultipartFile picture : pictures) {
+                addPicture(eventId, picture);
+            }
+        }
     }
 
     @Override

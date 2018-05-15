@@ -52,25 +52,27 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event addPicture(
+    public void addPicture(
             Long eventId,
             MultipartFile picture) throws IOException {
 
-        byte[] data = picture.getBytes();
-        int size = toIntExact(picture.getSize());
+        if (picture != null) {
+            byte[] data = picture.getBytes();
+            int size = toIntExact(picture.getSize());
 
-        return eventRepository.findById(eventId)
-                .map(event -> {
-                    event.setData(data);
-                    event.setFilename(picture.getOriginalFilename());
-                    event.setSize(size);
-                    event.setContentType(picture.getContentType());
-                    logger.info("Picture added for event with id [{}]", eventId);
-                    return eventRepository.save(event);
-                })
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Event with id [" + eventId + "] not found")
-                );
+            eventRepository.findById(eventId)
+                    .map(event -> {
+                        event.setData(data);
+                        event.setFilename(picture.getOriginalFilename());
+                        event.setSize(size);
+                        event.setContentType(picture.getContentType());
+                        logger.info("Picture added for event with id [{}]", eventId);
+                        return eventRepository.save(event);
+                    })
+                    .orElseThrow(() ->
+                            new EntityNotFoundException("Event with id [" + eventId + "] not found")
+                    );
+        }
     }
 
     @Override

@@ -30,12 +30,12 @@ public interface BrandService {
             MultipartFile picture,
             MultipartFile document) throws IOException;
 
-    BrandFile addFile(
+    void addFile(
             Long brandId,
             FileType fileType,
             MultipartFile file) throws IOException;
 
-    BrandFile updateFile(
+    void updateFile(
             Long brandId,
             FileType fileType,
             MultipartFile file) throws IOException;

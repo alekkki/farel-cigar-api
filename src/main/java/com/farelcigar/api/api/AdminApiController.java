@@ -1,7 +1,6 @@
 package com.farelcigar.api.api;
 
 import com.farelcigar.api.domain.Brand;
-import com.farelcigar.api.domain.BrandFile;
 import com.farelcigar.api.domain.Event;
 import com.farelcigar.api.domain.Promotion;
 import com.farelcigar.api.domain.dto.EventDto;
@@ -69,45 +68,45 @@ public class AdminApiController {
     @PostMapping(value = "/brand/{id}/files")
     public void addBrandFiles(
             @PathVariable Long id,
-            @RequestParam("picture") MultipartFile picture,
-            @RequestParam("document") MultipartFile document) throws IOException {
+            @RequestParam(value = "picture", required = false) MultipartFile picture,
+            @RequestParam(value = "document", required = false) MultipartFile document) throws IOException {
         brandService.addFiles(id, picture, document);
     }
 
     @PutMapping(value = "/brand/{id}/files")
     public void updateBrandFiles(
             @PathVariable Long id,
-            @RequestParam("picture") MultipartFile picture,
-            @RequestParam("document") MultipartFile document) throws IOException {
+            @RequestParam(value = "picture", required = false) MultipartFile picture,
+            @RequestParam(value = "document", required = false) MultipartFile document) throws IOException {
         brandService.updateFiles(id, picture, document);
     }
 
     @PostMapping(value = "/brand/{id}/picture")
-    public BrandFile addBrandPicture(
+    public void addBrandPicture(
             @PathVariable Long id,
-            @RequestParam("picture") MultipartFile picture) throws IOException {
-        return brandService.addFile(id, FileType.PICTURE, picture);
+            @RequestParam(value = "picture", required = false) MultipartFile picture) throws IOException {
+        brandService.addFile(id, FileType.PICTURE, picture);
     }
 
     @PostMapping(value = "/brand/{id}/document")
-    public BrandFile addBrandDocument(
+    public void addBrandDocument(
             @PathVariable Long id,
-            @RequestParam("document") MultipartFile document) throws IOException {
-        return brandService.addFile(id, FileType.DOCUMENT, document);
+            @RequestParam(value = "document", required = false) MultipartFile document) throws IOException {
+        brandService.addFile(id, FileType.DOCUMENT, document);
     }
 
     @PutMapping(value = "/brand/{id}/picture")
-    public BrandFile updateBrandPicture(
+    public void updateBrandPicture(
             @PathVariable Long id,
-            @RequestParam("picture") MultipartFile picture) throws IOException {
-        return brandService.updateFile(id, FileType.PICTURE, picture);
+            @RequestParam(value = "picture", required = false) MultipartFile picture) throws IOException {
+        brandService.updateFile(id, FileType.PICTURE, picture);
     }
 
     @PutMapping(value = "/brand/{id}/document")
-    public BrandFile updateBrandDocument(
+    public void updateBrandDocument(
             @PathVariable Long id,
-            @RequestParam("document") MultipartFile document) throws IOException {
-        return brandService.updateFile(id, FileType.DOCUMENT, document);
+            @RequestParam(value = "document", required = false) MultipartFile document) throws IOException {
+        brandService.updateFile(id, FileType.DOCUMENT, document);
     }
 
     @DeleteMapping(value = "/brand/file/{id}")
@@ -122,10 +121,10 @@ public class AdminApiController {
     }
 
     @PostMapping(value = "/event/{id}")
-    public Event addEventPicture(
+    public void addEventPicture(
             @PathVariable Long id,
-            @RequestParam("picture") MultipartFile picture) throws IOException {
-        return eventService.addPicture(id, picture);
+            @RequestParam(value = "picture", required = false) MultipartFile picture) throws IOException {
+        eventService.addPicture(id, picture);
     }
 
     @PutMapping(value = "/event/{id}")
@@ -147,6 +146,13 @@ public class AdminApiController {
         for (MultipartFile picture : pictures) {
             eventPictureService.addPicture(id, picture);
         }
+    }
+
+    @PutMapping(value = "/event/{id}/pictures")
+    public void updateEventPictures(
+            @PathVariable Long id,
+            @RequestParam(value = "pictures", required = false) MultipartFile[] pictures) throws IOException {
+            eventPictureService.updatePictures(id, pictures);
     }
 
     @DeleteMapping(value = "/event/picture/{id}")

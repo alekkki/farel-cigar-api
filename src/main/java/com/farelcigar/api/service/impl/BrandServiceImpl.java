@@ -152,7 +152,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public BrandFile addFile(
+    public void addFile(
             Long brandId,
             FileType fileType,
             MultipartFile file) throws IOException {
@@ -162,38 +162,42 @@ public class BrandServiceImpl implements BrandService {
                         new EntityNotFoundException("Brand with id [" + brandId + "] not found")
                 );
 
-        BrandFile brandFile = new BrandFile(
-                file.getBytes(),
-                file.getOriginalFilename(),
-                toIntExact(file.getSize()),
-                file.getContentType(),
-                fileType,
-                brand);
+        if (file != null) {
+            BrandFile brandFile = new BrandFile(
+                    file.getBytes(),
+                    file.getOriginalFilename(),
+                    toIntExact(file.getSize()),
+                    file.getContentType(),
+                    fileType,
+                    brand);
 
-        logger.info("File added for brand with id [{}]", brandId);
-        return brandFileRepository.save(brandFile);
+            logger.info("File added for brand with id [{}]", brandId);
+            brandFileRepository.save(brandFile);
+        }
     }
 
     @Override
-    public BrandFile updateFile(
+    public void updateFile(
             Long brandId,
             FileType fileType,
             MultipartFile file) throws IOException {
 
-        byte[] data = file.getBytes();
-        int size = toIntExact(file.getSize());
-        return brandFileRepository.findByBrandIdAndFileType(brandId, fileType)
-                .map(brandFile -> {
-                    brandFile.setData(data);
-                    brandFile.setName(file.getOriginalFilename());
-                    brandFile.setSize(size);
-                    brandFile.setContentType(file.getContentType());
-                    logger.info("File for brand with id [{}] updated", brandId);
-                    return brandFileRepository.save(brandFile);
-                })
-                .orElseThrow(() ->
-                        new EntityNotFoundException("File for brand with id [" + brandId + "] not found")
-                );
+        if (file != null) {
+            byte[] data = file.getBytes();
+            int size = toIntExact(file.getSize());
+            brandFileRepository.findByBrandIdAndFileType(brandId, fileType)
+                    .map(brandFile -> {
+                        brandFile.setData(data);
+                        brandFile.setName(file.getOriginalFilename());
+                        brandFile.setSize(size);
+                        brandFile.setContentType(file.getContentType());
+                        logger.info("File for brand with id [{}] updated", brandId);
+                        return brandFileRepository.save(brandFile);
+                    })
+                    .orElseThrow(() ->
+                            new EntityNotFoundException("File for brand with id [" + brandId + "] not found")
+                    );
+        }
     }
 
     @Override
