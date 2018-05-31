@@ -78,7 +78,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventDto> getAllEvents() {
         List<EventDto> eventDtoList = new ArrayList<>();
-        List<Event> events = eventRepository.findAll();
+        List<Event> events = eventRepository.findAllByOrderByDateDesc();
         for (Event e : events) {
             EventDto eventDto = new EventDto(
                     e.getId(),

@@ -45,31 +45,34 @@ public class PromotionServiceImpl implements PromotionService {
     }
 
     @Override
-    public Promotion addPicture(
+    public void addPicture(
             Long promotionId,
             MultipartFile picture) throws IOException {
 
-        byte[] data = picture.getBytes();
-        int size = toIntExact(picture.getSize());
+        if (picture != null) {
+            byte[] data = picture.getBytes();
+            int size = toIntExact(picture.getSize());
 
-        return promotionRepository.findById(promotionId)
-                .map(promotion -> {
-                    promotion.setData(data);
-                    promotion.setFilename(picture.getOriginalFilename());
-                    promotion.setSize(size);
-                    promotion.setContentType(picture.getContentType());
-                    logger.info("Picture added for promotion with id [{}]", promotionId);
-                    return promotionRepository.save(promotion);
-                })
-                .orElseThrow(() ->
-                        new EntityNotFoundException("Promotion with id [" + promotionId + "] not found")
-                );
+            promotionRepository.findById(promotionId)
+                    .map(promotion -> {
+                        promotion.setData(data);
+                        promotion.setFilename(picture.getOriginalFilename());
+                        promotion.setSize(size);
+                        promotion.setContentType(picture.getContentType());
+                        logger.info("Picture added for promotion with id [{}]", promotionId);
+                        return promotionRepository.save(promotion);
+                    })
+                    .orElseThrow(() ->
+                            new EntityNotFoundException("Promotion with id [" + promotionId + "] not found")
+                    );
+
+        }
     }
 
     @Override
     public List<PromotionDto> getAllPromotions() {
         List<PromotionDto> promotionDtoList = new ArrayList<>();
-        List<Promotion> promotions = promotionRepository.findAll();
+        List<Promotion> promotions = promotionRepository.findAllByOrderByEndDateAsc();
         for (Promotion p : promotions) {
             PromotionDto promotionDto = new PromotionDto(
                     p.getId(),

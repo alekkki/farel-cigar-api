@@ -152,7 +152,7 @@ public class AdminApiController {
     public void updateEventPictures(
             @PathVariable Long id,
             @RequestParam(value = "pictures", required = false) MultipartFile[] pictures) throws IOException {
-            eventPictureService.updatePictures(id, pictures);
+        eventPictureService.updatePictures(id, pictures);
     }
 
     @DeleteMapping(value = "/event/picture/{id}")
@@ -171,10 +171,10 @@ public class AdminApiController {
     }
 
     @PostMapping(value = "/promotion/{id}")
-    public Promotion addPromotionPicture(
+    public void addPromotionPicture(
             @PathVariable Long id,
-            @RequestParam("picture") MultipartFile picture) throws IOException {
-        return promotionService.addPicture(id, picture);
+            @RequestParam(value = "picture", required = false) MultipartFile picture) throws IOException {
+        promotionService.addPicture(id, picture);
     }
 
     @PutMapping(value = "/promotion/{id}")

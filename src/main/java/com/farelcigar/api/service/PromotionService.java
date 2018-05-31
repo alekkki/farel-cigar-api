@@ -12,7 +12,7 @@ public interface PromotionService {
 
     Promotion createPromotion(PromotionDto promotionDto);
 
-    Promotion addPicture(
+    void addPicture(
             Long promotionId,
             MultipartFile picture) throws IOException;
 
