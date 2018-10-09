@@ -1,6 +1,7 @@
 package com.farelcigar.api.api;
 
 import com.farelcigar.api.domain.Brand;
+import com.farelcigar.api.domain.User;
 import com.farelcigar.api.domain.dto.EventDto;
 import com.farelcigar.api.domain.dto.EventPicturesDto;
 import com.farelcigar.api.domain.dto.PromotionDto;
@@ -11,10 +12,7 @@ import com.farelcigar.api.service.PromotionService;
 import com.farelcigar.api.service.impl.UserDetailsServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -48,19 +46,24 @@ public class PublicApiController {
         return userDetailsService.isAuthenticated(authentication);
     }
 
-    /*@GetMapping(value = "/user")
-    public User getAuthUser(Authentication authentication) {
-        return userDetailsService.getAuthUser(authentication);
-    }*/
-
-    /*@PostMapping(value = "/user")
+    @PostMapping(value = "/user")
     public User createUser(@RequestBody User user) {
         return userDetailsService.createUser(user);
-    }*/
+    }
 
     @GetMapping(value = "/brand/all")
     public List<Brand> getAllBrands() {
         return brandService.getAllBrands();
+    }
+
+    @GetMapping(value = "/brand/cigars")
+    public List<Brand> getAllCigars() {
+        return brandService.getAllCigars();
+    }
+
+    @GetMapping(value = "/brand/accessories")
+    public List<Brand> getAllAccessories() {
+        return brandService.getAllAccessories();
     }
 
     @GetMapping(value = "/brand/{id}/document")

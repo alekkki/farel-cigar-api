@@ -2,6 +2,7 @@ package com.farelcigar.api.service.impl;
 
 import com.farelcigar.api.domain.Brand;
 import com.farelcigar.api.domain.BrandFile;
+import com.farelcigar.api.domain.enums.BrandType;
 import com.farelcigar.api.domain.enums.FileType;
 import com.farelcigar.api.exception.EntityNotFoundException;
 import com.farelcigar.api.repository.BrandFileRepository;
@@ -38,8 +39,8 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public Brand createBrand(String name) {
-        Brand brand = new Brand(name);
+    public Brand createBrand(String name, BrandType brandType) {
+        Brand brand = new Brand(name, brandType);
         logger.info("Brand with name [{}] created", brand.getName());
         return brandRepository.save(brand);
     }
@@ -47,6 +48,16 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public List<Brand> getAllBrands() {
         return brandRepository.findAll();
+    }
+
+    @Override
+    public List<Brand> getAllCigars() {
+        return brandRepository.findByBrandType(BrandType.Cigar);
+    }
+
+    @Override
+    public List<Brand> getAllAccessories() {
+        return brandRepository.findByBrandType(BrandType.Accessory);
     }
 
     @Override

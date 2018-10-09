@@ -2,6 +2,7 @@ package com.farelcigar.api.service;
 
 import com.farelcigar.api.domain.Brand;
 import com.farelcigar.api.domain.BrandFile;
+import com.farelcigar.api.domain.enums.BrandType;
 import com.farelcigar.api.domain.enums.FileType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,9 +13,13 @@ import java.util.List;
 
 public interface BrandService {
 
-    Brand createBrand(String name);
+    Brand createBrand(String name, BrandType brandType);
 
     List<Brand> getAllBrands();
+
+    List<Brand> getAllCigars();
+
+    List<Brand> getAllAccessories();
 
     Brand updateBrand(Long id, String name);
 

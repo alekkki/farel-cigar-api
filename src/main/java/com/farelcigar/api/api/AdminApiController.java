@@ -49,8 +49,8 @@ public class AdminApiController {
     }
 
     @PostMapping(value = "/brand")
-    public Brand createBrand(@RequestBody String name) {
-        return brandService.createBrand(name);
+    public Brand createBrand(@RequestBody Brand brand) {
+        return brandService.createBrand(brand.getName(), brand.getBrandType());
     }
 
     @PutMapping(value = "/brand/{id}")
