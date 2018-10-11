@@ -52,12 +52,12 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public List<Brand> getAllCigars() {
-        return brandRepository.findByBrandType(BrandType.Cigar);
+        return brandRepository.findByBrandTypeOrderByName(BrandType.Cigar);
     }
 
     @Override
     public List<Brand> getAllAccessories() {
-        return brandRepository.findByBrandType(BrandType.Accessory);
+        return brandRepository.findByBrandTypeOrderByName(BrandType.Accessory);
     }
 
     @Override

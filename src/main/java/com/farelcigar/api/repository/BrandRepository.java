@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Long> {
-    List<Brand> findByBrandType(BrandType brandType);
+    List<Brand> findByBrandTypeOrderByName(BrandType brandType);
 }
