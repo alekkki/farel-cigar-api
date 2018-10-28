@@ -1,0 +1,1 @@
+web: build/install/farel-cigar-api/bin/farel-cigar-api
